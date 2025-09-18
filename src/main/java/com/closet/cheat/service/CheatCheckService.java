@@ -8,9 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -19,11 +17,12 @@ public class CheatCheckService {
     private CheatRepository cheatRepository;
 
     public CheatResponse  checkFraud(CheatRequest request) {
-        boolean cheat = false;
+        // 사기 이력 검색
         List<CheatEntity> cheats = cheatRepository.findAllByAccountOrPhone(request.getAccount(), request.getPhone());
+
         // 사기 이력이 없다면
         if (cheats.isEmpty()) {
-            log.info("No fraud record found for account={} or phone={}", request.getAccount(), request.getPhone());
+            log.info("사기 이력을 찾을 수 없습니다. account={} or phone={}", request.getAccount(), request.getPhone());
             return new CheatResponse(false, null, 0);
         }
 
@@ -35,8 +34,7 @@ public class CheatCheckService {
         // 여러 유형을 모두 표시하고 싶으면
         // String types = cheats.stream().map(CheatEntity::getType).distinct().collect(Collectors.joining(", "));
 
-        // 💥 이거 한 계좌에 여러 종류의 유형이 있을 경우 계산법 바꿔야함.
-        log.info("Fraud detected! Total count={}, Type(s)={}", totalCnt, type);
+        log.info("사기 이력을 발견했습니다. Total count={}, Type(s)={}", totalCnt, type);
         log.debug("All records: {}", cheats);
 
         return new CheatResponse(true, type, totalCnt);

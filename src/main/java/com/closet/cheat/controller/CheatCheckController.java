@@ -16,6 +16,7 @@ public class CheatCheckController {
         this.cheatCheckService = cheatCheckService;
     }
 
+    // 전화번호나 계좌번호 입력 시, 사기 기록이 있는지 횟수와 종류를 판별하여 전송.
     @PostMapping("/check")
     public ResponseEntity<CheatResponse> checkFraud(@RequestBody CheatRequest request) {
         // request: {"account": "123-456-789","phone": "010-1234-5678"}

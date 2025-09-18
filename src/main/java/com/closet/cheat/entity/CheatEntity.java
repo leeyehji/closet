@@ -13,8 +13,8 @@ public class CheatEntity {
 
     private String account;
     private String phone;
-    //사기 종류
+    // 사기 종류
     private String type;
-    //사기 건 수
+    // 사기 건 수
     private int cnt;
 }

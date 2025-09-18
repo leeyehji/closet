@@ -23,7 +23,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll() // H2 콘솔 접근 허용
-                        .requestMatchers("/cheat/check").permitAll()
+                        .requestMatchers("/cheat/check").permitAll() // 사기 이력 조회
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.permitAll()) // formLogin 최신 DSL
@@ -31,6 +31,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // 테스트용 유저
     @Bean
     public UserDetailsService users() {
         UserDetails user = User.withDefaultPasswordEncoder()
