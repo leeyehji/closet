@@ -46,30 +46,37 @@ public class BoardService {
 
     // 판매글 작성
     public SellBoardDTO createSell(SellBoardDTO dto) {
-        SellEntity entity = dto.toEntity();
-        SellEntity saved = sellRepository.save(entity);
-        return SellBoardDTO.fromEntity(saved);
+        try {
+            SellEntity entity = dto.toEntity();
+            SellEntity saved = sellRepository.save(entity);
+            return SellBoardDTO.fromEntity(saved);
+        } catch (Exception e) {
+            e.printStackTrace();  // 여기서 스택 트레이스 확인
+            throw e;  // Postman에 500 반환
+        }
     }
 
     // 판매글 수정 (작성자만 가능)
     @Transactional
     public SellBoardDTO updateSell(Long id, SellBoardDTO dto, Long currentUserId) {
+        // 존재하는 글인지 확인
         SellEntity entity = sellRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("글을 찾을 수 없습니다."));
 
-        if (!entity.getSeller_id().equals(currentUserId)) {
+        // 작성자=수정자 여부 확인
+        if (!entity.getSellerId().equals(currentUserId)) {
             throw new UnauthorizedException("수정 권한이 없습니다.");
         }
 
         entity.setTitle(dto.getTitle());
         entity.setDescription(dto.getDescription());
-        entity.setThumbnail_image(dto.getThumbnail_image());
-        entity.setDaily_fee(dto.getDaily_fee());
-        entity.setLate_fee(dto.getLate_fee());
+        entity.setThumbnailImage(dto.getThumbnailImage());
+        entity.setDailyFee(dto.getDailyFee());
+        entity.setLateFee(dto.getLateFee());
         entity.setDeposit(dto.getDeposit());
         entity.setLocation(dto.getLocation());
-        entity.setProduct_state(dto.getProduct_state());
-        entity.setUpdated_at(new Date());
+        entity.setProductState(dto.getProductState());
+//        entity.setUpdated_at(new Date());
 
         return SellBoardDTO.fromEntity(entity);
     }
@@ -79,7 +86,7 @@ public class BoardService {
         SellEntity entity = sellRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("글을 찾을 수 없습니다."));
 
-        if (!entity.getSeller_id().equals(currentUserId)) {
+        if (!entity.getSellerId().equals(currentUserId)) {
             throw new UnauthorizedException("삭제 권한이 없습니다.");
         }
 
@@ -107,7 +114,7 @@ public class BoardService {
         ReviewEntity entity = reviewRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("리뷰를 찾을 수 없습니다."));
 
-        if (!entity.getReviewer_id().equals(currentUserId)) {
+        if (!entity.getReviewerId().equals(currentUserId)) {
             throw new UnauthorizedException("삭제 권한이 없습니다.");
         }
 

@@ -2,8 +2,11 @@ package com.closet.board.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.sql.Date;
+import java.util.Date;
+
 
 @Data
 @Entity
@@ -14,15 +17,17 @@ public class ReviewEntity {
     private Long id;
 
     // 리뷰작성자. user테이블 fk
-    private Long reviewer_id;
+    private Long reviewerId;
     // 리뷰대상글. product테이블 fk
-    private Long product_id;
+    private Long productId;
 
     // 리뷰 내용
     private String content;
 
     // 생성일시
-    private Date created_at;
+    @CreationTimestamp
+    private Date createdAt;
     // 수정일시
-    private  Date updated_at;
+    @UpdateTimestamp
+    private  Date updatedAt;
 }

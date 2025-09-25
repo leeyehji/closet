@@ -4,7 +4,7 @@ import com.closet.board.entity.ReviewEntity;
 import lombok.Builder;
 import lombok.Data;
 
-import java.sql.Date;
+import java.util.Date;
 
 
 @Data
@@ -14,28 +14,28 @@ public class ReviewDTO {
     private Long id;
 
     // 리뷰작성자.
-    private Long reviewer_id;
+    private Long reviewerId;
     // 📢리뷰작성대상자 생략함. 필요없을듯.
     // 리뷰대상글.
-    private Long product_id;
+    private Long productId;
 
     // 리뷰 내용
     private String content;
 
     // 생성일시
-    private Date created_at;
+    private Date createdAt;
     // 수정일시
-    private  Date updated_at;
+    private Date updatedAt;
 
     // ✅ Entity → DTO
     public static ReviewDTO fromEntity(ReviewEntity entity) {
         return ReviewDTO.builder()
                 .id(entity.getId())
-                .reviewer_id(entity.getReviewer_id())
-                .product_id(entity.getProduct_id())
+                .reviewerId(entity.getReviewerId())
+                .productId(entity.getProductId())
                 .content(entity.getContent())
-                .created_at(entity.getCreated_at())
-                .updated_at(entity.getUpdated_at())
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
                 .build();
     }
 
@@ -43,11 +43,11 @@ public class ReviewDTO {
     public ReviewEntity toEntity() {
         ReviewEntity entity = new ReviewEntity();
         entity.setId(this.id);
-        entity.setReviewer_id(this.reviewer_id);
-        entity.setProduct_id(this.product_id);
+        entity.setReviewerId(this.reviewerId);
+        entity.setProductId(this.productId);
         entity.setContent(this.content);
-        entity.setCreated_at(this.created_at);
-        entity.setUpdated_at(this.updated_at);
+        entity.setCreatedAt(this.createdAt);
+        entity.setUpdatedAt(this.updatedAt);
         return entity;
     }
 }

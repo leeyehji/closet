@@ -24,6 +24,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll() // H2 콘솔 접근 허용
                         .requestMatchers("/cheat/check").permitAll() // 사기 이력 조회
+                        .requestMatchers("/board/**").permitAll()  // ✅ 테스트용
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.permitAll()) // formLogin 최신 DSL
