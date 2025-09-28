@@ -1,9 +1,12 @@
 package com.closet.cheat.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "cheat")
 public class CheatEntity {

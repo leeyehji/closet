@@ -2,7 +2,7 @@ package com.closet.board.entity;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.boot.context.properties.bind.DefaultValue;
@@ -10,7 +10,11 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 import java.util.Date;
 
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "sell")
 public class SellEntity {

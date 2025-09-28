@@ -16,8 +16,8 @@ public class CheatCheckService {
     @Autowired
     private CheatRepository cheatRepository;
 
-    public CheatResponse  checkFraud(CheatRequest request) {
-        // 사기 이력 검색
+    // 사기 이력 검색 메서드
+    public CheatResponse checkFraud(CheatRequest request) {
         List<CheatEntity> cheats = cheatRepository.findAllByAccountOrPhone(request.getAccount(), request.getPhone());
 
         // 사기 이력이 없다면
@@ -30,7 +30,7 @@ public class CheatCheckService {
         int totalCnt = cheats.stream().mapToInt(CheatEntity::getCnt).sum();
 
         // 대표 type 선택 (예: 첫 번째 유형)
-        String type = cheats.get(0).getType() + (cheats.size()>1 ?" 등" : "");
+        String type = cheats.getFirst().getType() + (cheats.size()>1 ?" 등" : "");
         // 여러 유형을 모두 표시하고 싶으면
         // String types = cheats.stream().map(CheatEntity::getType).distinct().collect(Collectors.joining(", "));
 

@@ -2,10 +2,12 @@ package com.closet.board.service;
 
 import com.closet.board.bean.ReviewDTO;
 import com.closet.board.bean.SellBoardDTO;
+import com.closet.board.entity.FavoriteEntity;
 import com.closet.board.entity.ReviewEntity;
 import com.closet.board.entity.SellEntity;
 import com.closet.board.exception.NotFoundException;
 import com.closet.board.exception.UnauthorizedException;
+import com.closet.board.repository.FavoriteRepository;
 import com.closet.board.repository.ReviewRepository;
 import com.closet.board.repository.SellBoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ import java.util.Optional;
 public class BoardService {
     private final SellBoardRepository sellRepository;
     private final ReviewRepository reviewRepository;
+    private final FavoriteRepository favoriteRepository;
 
     // 판매글 전체 조회 (페이징)
     public Page<SellBoardDTO> getAllSells(Pageable pageable) {
@@ -51,7 +54,8 @@ public class BoardService {
             SellEntity saved = sellRepository.save(entity);
             return SellBoardDTO.fromEntity(saved);
         } catch (Exception e) {
-            e.printStackTrace();  // 여기서 스택 트레이스 확인
+            e.printStackTrace();  // 여기서 스택 트레이스 확인. 콘솔에서만 확인 가능.
+            log.error("판매글 생성 중 오류 발생: {}", dto, e); // 로그에 오류 기록 남김
             throw e;  // Postman에 500 반환
         }
     }
@@ -93,6 +97,34 @@ public class BoardService {
         sellRepository.delete(entity);
     }
 
+    // 찜 추가(토글 방식. 서버에서 현재 상태를 반대로 변경.)
+    public boolean toggleFavorite(Long userId, Long productId) {
+        return favoriteRepository.findByUserIdAndProductId(userId, productId)
+                .map(fav -> { // 이미 있으면 삭제
+                    favoriteRepository.delete(fav);
+                    return false; // 찜 취소됨
+                })
+                .orElseGet(() -> { // 없으면 추가
+                    FavoriteEntity newFav = FavoriteEntity.builder()
+                            .userId(userId)
+                            .productId(productId)
+                            .build();
+                    favoriteRepository.save(newFav);
+
+                    return true; // 찜 추가됨
+                });
+    }
+
+    // 내 찜 목록 조회
+    public List<FavoriteEntity> getMyFavorites(Long userId) {
+        return favoriteRepository.findByUserId(userId);
+    }
+
+    // 해당 글 찜 개수
+    public Long countFavorites(Long productId) {
+        return favoriteRepository.countByProductId(productId);
+    }
+
     // 리뷰 조회
     public List<ReviewDTO> getReviews(Long productId) {
         return reviewRepository.findByProductId(productId)
@@ -120,6 +152,5 @@ public class BoardService {
 
         reviewRepository.delete(entity);
     }
-
 
 }
